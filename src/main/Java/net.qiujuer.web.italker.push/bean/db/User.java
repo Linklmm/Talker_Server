@@ -39,7 +39,7 @@ public class User {
     private String password;
     //头像允许为空
     @Column
-    private String portraid;
+    private String portrait;
 
     @Column
     private  String description;
@@ -128,12 +128,12 @@ public class User {
         this.password = password;
     }
 
-    public String getPortraid() {
-        return portraid;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setPortraid(String portraid) {
-        this.portraid = portraid;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public String getDescription() {
