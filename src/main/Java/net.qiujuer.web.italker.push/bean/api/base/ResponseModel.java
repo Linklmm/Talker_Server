@@ -49,35 +49,37 @@ public class ResponseModel<M> implements Serializable {
     @Expose
     private String message;
     @Expose
-    private LocalDateTime time=LocalDateTime.now();
+    private LocalDateTime time = LocalDateTime.now();
     @Expose
     private M result;
 
-    public ResponseModel(){
-        code=1;
-        message="ok";
+    public ResponseModel() {
+        code = 1;
+        message = "ok";
     }
-    public ResponseModel(M result){
+
+    public ResponseModel(M result) {
         this();
-        this.result=result;
+        this.result = result;
     }
 
-    public ResponseModel(int code,String message){
-        this.code=code;
-        this.message=message;
-    }
-    public ResponseModel(int code,String message,M result){
-        this.code=code;
-        this.message=message;
-        this.result=result;
+    public ResponseModel(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public boolean isSucceed() {
-        return code == SUCCEED;
+    public ResponseModel(int code, String message, M result) {
+        this.code = code;
+        this.message = message;
+        this.result = result;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public boolean isSucceed() {
+        return code == SUCCEED;
     }
 
     public void setCode(int code) {
@@ -108,9 +110,10 @@ public class ResponseModel<M> implements Serializable {
         this.result = result;
     }
 
-    public static <M> ResponseModel<M> buildOk(){
+    public static <M> ResponseModel<M> buildOk() {
         return new ResponseModel<M>();
     }
+
     public static <M> ResponseModel<M> buildOk(M result) {
         return new ResponseModel<M>(result);
     }
@@ -162,5 +165,6 @@ public class ResponseModel<M> implements Serializable {
     public static <M> ResponseModel<M> buildCreateError(int type) {
         return new ResponseModel<M>(type, "Create failed.");
     }
+
 
 }

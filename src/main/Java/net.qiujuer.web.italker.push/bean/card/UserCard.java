@@ -1,6 +1,8 @@
 package net.qiujuer.web.italker.push.bean.card;
 
 import com.google.gson.annotations.Expose;
+import net.qiujuer.web.italker.push.bean.db.User;
+import net.qiujuer.web.italker.push.utils.Hib;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,7 +19,7 @@ public class UserCard {
     private String phone;
 
     @Expose
-    private String portraid;
+    private String portrait;
     @Expose
     private  String desc;
     @Expose
@@ -31,10 +33,39 @@ public class UserCard {
     private int following;
 //我与当前User的关系状态是否已经关注了这个人
     @Expose
-    private int isFollow;
+    private boolean isFollow;
     @Expose
     //用户信息最后的更新时间
     private LocalDateTime modifyAt;
+
+    public UserCard(final User user) {
+        this(user, false);
+    }
+
+    public UserCard(final User user, boolean isFollow) {
+        this.isFollow = isFollow;
+
+        this.id = user.getId();
+        this.name = user.getName();
+        this.phone = user.getPhone();
+        this.portrait = user.getPortrait();
+        this.desc = user.getDescription();
+        this.sex = user.getSex();
+        this.modifyAt = user.getUpdateAt();
+
+        // user.getFollowers().size()
+        // 懒加载会报错，因为没有Session
+        Hib.queryOnly(session -> {
+            // 重新加载一次用户信息
+            session.load(user, user.getId());
+            // 这个时候仅仅只是进行了数量查询，并没有查询整个集合
+            // 要查询集合，必须在session存在情况下进行遍历
+            // 或者使用Hibernate.initialize(user.getFollowers());
+            follows = user.getFollows().size();
+            following = user.getFollowing().size();
+        });
+
+    }
 
     public String getId() {
         return id;
@@ -60,12 +91,12 @@ public class UserCard {
         this.phone = phone;
     }
 
-    public String getPortraid() {
-        return portraid;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setPortraid(String portraid) {
-        this.portraid = portraid;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public String getDesc() {
@@ -100,11 +131,11 @@ public class UserCard {
         this.following = following;
     }
 
-    public int getIsFollow() {
+    public boolean getIsFollow() {
         return isFollow;
     }
 
-    public void setIsFollow(int isFollow) {
+    public void setIsFollow(boolean isFollow) {
         this.isFollow = isFollow;
     }
 
